@@ -1,13 +1,8 @@
 /node_modules
 /vendor
 .git
-.github
-.idea
-.vscode
 .env
 .env.backup
 .phpunit.result.cache
-docker-compose.yml
-Dockerfile
 npm-debug.log
 yarn-error.log

@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     nodejs \
-    npm
+    npm \
+    supervisor
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -44,10 +45,18 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Install dependencies
-RUN composer install --no-interaction --no-dev --optimize-autoloader
+RUN composer install --no-interaction --optimize-autoloader
 RUN npm install && npm run build
 
-# Expose port 9000 (PHP-FPM)
-EXPOSE 9000
+# Create startup script
+COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-CMD ["php-fpm"]
+# Setup supervisor to run PHP-FPM
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Expose port 9000 (PHP-FPM) and 80 (if you want to use PHP built-in server)
+EXPOSE 9000 80
+
+# Use supervisor to manage processes
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
