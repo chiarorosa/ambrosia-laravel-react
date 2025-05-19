@@ -40,6 +40,7 @@ Esta branch inclui a configuração completa para rodar a aplicação em ambient
 Para executar a aplicação localmente com Docker:
 
 ```bash
+docker compose build
 docker compose up -d
 ```
 
