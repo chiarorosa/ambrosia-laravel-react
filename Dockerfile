@@ -40,6 +40,11 @@ RUN apt-get install -y nodejs
 # Copy application files
 COPY . /var/www/html
 
+# Create SQLite database directory and file
+RUN mkdir -p /var/www/html/database
+RUN touch /var/www/html/database/database.sqlite
+RUN chmod -R 775 /var/www/html/database
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache

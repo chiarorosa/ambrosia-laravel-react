@@ -11,20 +11,22 @@ echo "APP_URL=${APP_URL:-http://localhost}" >> .env
 echo "LOG_CHANNEL=${LOG_CHANNEL:-stack}" >> .env
 echo "LOG_LEVEL=${LOG_LEVEL:-error}" >> .env
 
-echo "DB_CONNECTION=${DB_CONNECTION:-mysql}" >> .env
-echo "DB_HOST=${DB_HOST:-mysql}" >> .env
-echo "DB_PORT=${DB_PORT:-3306}" >> .env
-echo "DB_DATABASE=${DB_DATABASE:-laravel}" >> .env
-echo "DB_USERNAME=${DB_USERNAME:-root}" >> .env
-echo "DB_PASSWORD=${DB_PASSWORD:-}" >> .env
-
-# Adicione outras variáveis de ambiente conforme necessário
+# Configuração para SQLite
+echo "DB_CONNECTION=${DB_CONNECTION:-sqlite}" >> .env
+echo "DB_DATABASE=${DB_DATABASE:-/var/www/html/database/database.sqlite}" >> .env
 
 # Generate app key if not set
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --no-interaction
 else
     echo "APP_KEY already set"
+fi
+
+# Criar arquivo SQLite se não existir
+if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
+    echo "Usando SQLite como banco de dados"
+    touch database/database.sqlite
+    chmod 666 database/database.sqlite
 fi
 
 # Run migrations
