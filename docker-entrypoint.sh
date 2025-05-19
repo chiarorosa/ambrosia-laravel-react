@@ -29,6 +29,14 @@ if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
     chmod 666 database/database.sqlite
 fi
 
+# Clear all caches before starting
+echo "Limpando caches do Laravel..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+php artisan optimize:clear
+
 # Run migrations
 php artisan migrate --force
 
