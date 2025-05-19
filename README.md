@@ -41,3 +41,24 @@ Para executar a aplicação localmente com Docker:
 
 ```bash
 docker compose up -d
+```
+
+## Configuração no Render.com
+
+Esta seção descreve as configurações recomendadas para implantar esta aplicação no [Render.com](https://render.com/).
+
+### Variáveis de Ambiente
+
+Configure as seguintes variáveis de ambiente no seu serviço do Render, menu MANAGE -> Environment -> Environment Variables
+
+| Key              | Value                                                       |
+| ---------------- | ----------------------------------------------------------- |
+| `APP_CONNECTION` | `sqlite`                                                    |
+| `APP_DEBUG`      | `false`                                                     |
+| `APP_ENV`        | `production`                                                |
+| `APP_URL`        | `https://seu-dominio.onrender.com` (substitua pelo seu URL) |
+| `DB_CONNECTION`  | `sqlite`                                                    |
+| `DB_DATABASE`    | `/var/www/html/database/database.sqlite`                    |
+| `RENDER`         | `true`                                                      |
+
+Lembre-se de ajustar o `APP_URL` para o URL fornecido pelo Render.com para sua aplicação.
