@@ -1,8 +1,31 @@
 #!/bin/bash
 set -e
 
+# Create .env file from environment variables
+echo "APP_NAME=\"${APP_NAME:-Ambrosia}\"" > .env
+echo "APP_ENV=${APP_ENV:-production}" >> .env
+echo "APP_KEY=${APP_KEY:-}" >> .env
+echo "APP_DEBUG=${APP_DEBUG:-false}" >> .env
+echo "APP_URL=${APP_URL:-http://localhost}" >> .env
+
+echo "LOG_CHANNEL=${LOG_CHANNEL:-stack}" >> .env
+echo "LOG_LEVEL=${LOG_LEVEL:-error}" >> .env
+
+echo "DB_CONNECTION=${DB_CONNECTION:-mysql}" >> .env
+echo "DB_HOST=${DB_HOST:-mysql}" >> .env
+echo "DB_PORT=${DB_PORT:-3306}" >> .env
+echo "DB_DATABASE=${DB_DATABASE:-laravel}" >> .env
+echo "DB_USERNAME=${DB_USERNAME:-root}" >> .env
+echo "DB_PASSWORD=${DB_PASSWORD:-}" >> .env
+
+# Adicione outras variáveis de ambiente conforme necessário
+
 # Generate app key if not set
-php artisan key:generate --no-interaction --force
+if [ -z "$APP_KEY" ]; then
+    php artisan key:generate --no-interaction
+else
+    echo "APP_KEY already set"
+fi
 
 # Run migrations
 php artisan migrate --force
