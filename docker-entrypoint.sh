@@ -4,6 +4,14 @@ set -e
 # Create .env file from environment variables
 echo "APP_NAME=\"${APP_NAME:-Ambrosia}\"" > .env
 echo "APP_ENV=${APP_ENV:-production}" >> .env
+
+# Configuração Render.com
+if [ "${RENDER:-false}" = "true" ]; then
+  echo "APP_ENV=production" >> .env
+else
+  echo "APP_ENV=${APP_ENV:-local}" >> .env
+fi
+
 echo "APP_KEY=" >> .env
 echo "APP_DEBUG=${APP_DEBUG:-true}" >> .env
 echo "APP_URL=${APP_URL:-http://localhost}" >> .env
