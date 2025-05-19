@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ambrosia-app
+    restart: unless-stopped
+    ports:
+      - '5173:5173'
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - ambrosia-network
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: ambrosia-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - ambrosia-network
+
+  db:
+    image: mysql:8.0
+    container_name: ambrosia-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-ambrosia}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-ambrosia}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ambrosia-data:/var/lib/mysql
+    networks:
+      - ambrosia-network
+
+networks:
+  ambrosia-network:
+    driver: bridge
+
+volumes:
+  ambrosia-data:
+    driver: local
